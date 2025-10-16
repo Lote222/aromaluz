@@ -4,21 +4,19 @@
 
 @layer base {
   :root {
-    /* Nueva paleta de colores - Tema Claro */
-    --background: 253 251 245; /* Lienzo Sagrado */
-    --foreground: 74 74 74; /* Carbón Natural */
-    --primary: 46 64 52; /* Verde Ancestral */
-    --secondary: 234 240 229; /* Verde Salvia Pálido */
-    --muted: 156 163 175; /* Gris medio para texto secundario */
+    /* FIX: Paleta de colores ajustada para la nueva identidad visual */
+    --background: 19 12 28;      /* Púrpura Noche Profunda (Fondo) */
+    --foreground: 232 225 245;   /* Lavanda Pálido (Texto general) */
+    --primary: 217 169 83;      /* Dorado Místico (Botones, Títulos, Acentos) */
+    --secondary: 153 102 204;     /* Violeta Esotérico (Hover, elementos secundarios) */
+    --muted: 160 148 180;       /* Gris Lavanda (Texto secundario) */
   }
 
   body {
-    /* Se aplica el color de fondo y el color de texto base */
     @apply bg-background text-foreground font-sans;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    /* Se aplica la tipografía para encabezados */
     @apply font-serif;
     letter-spacing: -0.5px;
   }
@@ -34,7 +32,8 @@
   }
 
   .btn-primary:hover {
-    @apply bg-[#243329] transform -translate-y-0.5 shadow-lg shadow-primary/20;
+    /* FIX: Sombra y hover ajustados. Usaremos un dorado un poco más claro o el mismo violeta para el hover */
+    @apply bg-secondary text-foreground transform -translate-y-0.5 shadow-lg shadow-primary/20;
   }
 
   .product-card-container::after {
@@ -44,12 +43,12 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at 50% 50%, rgba(234, 240, 229, 0.5) 0%, rgba(234, 240, 229, 0) 70%);
+    background: radial-gradient(circle at 50% 50%, rgba(217, 169, 83, 0.2) 0%, rgba(217, 169, 83, 0) 70%);
     opacity: 0;
     transform: scale(0.8);
     transition: opacity 0.4s ease-out, transform 0.4s ease-out;
     z-index: 0;
-    border-radius: inherit; /* Ensure the glow follows the card's border radius */
+    border-radius: inherit;
   }
 
   .group:hover .product-card-container::after {

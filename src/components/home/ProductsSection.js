@@ -8,7 +8,7 @@ const ProductsSection = () => {
   const featuredProducts = products.slice(0, 6);
 
   return (
-    <section id="rituales" className="py-20 bg-secondary">
+    <section id="rituales" className="py-20 bg-foreground">
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary">

@@ -19,15 +19,15 @@ const lato = Lato({
   display: 'swap',
 });
 
+// FIX: Metadata actualizada para Aromaluz
 export const metadata = {
-  title: "Herbolaria Sagrada - Suministros Naturistas & Esencias Esotéricas",
-  description: "Descubre el poder de la naturaleza con nuestros suministros naturistas y esencias esotéricas. Productos consagrados para manifestar, sanar y proteger tu energía.",
+  title: "Aromaluz Esotéric Santuario & Esencias",
+  description: "Descubre el poder de la magia y la energía. Rituales, esencias y herramientas para manifestar, sanar y proteger tu espíritu.",
 };
 
 export default async function RootLayout({ children }) {
   const siteConfig = await getWebsiteConfig(process.env.WEBSITE_SLUG);
-  console.log(siteConfig)
-
+  
   return (
     <html lang="es" className={`${lato.variable} ${lora.variable}`}>
       <body className="font-sans bg-background text-foreground">

@@ -128,3 +128,36 @@ export async function getLatestWinnerForSite(websiteSlug) {
     return null;
   }
 }
+
+export async function getRitualsForSite(websiteSlug) {
+  try {
+    const { data: websiteData, error: websiteError } = await supabase
+      .from('websites')
+      .select('id')
+      .eq('slug', websiteSlug)
+      .single();
+
+    if (websiteError || !websiteData) {
+      console.error('No se pudo encontrar el sitio para buscar rituales:', websiteError?.message);
+      return [];
+    }
+
+    const websiteId = websiteData.id;
+
+    const { data, error } = await supabase
+      .from('rituales')
+      .select('*') // Traemos todos los campos
+      .eq('website_id', websiteId)
+      .order('created_at', { ascending: true }); // O el orden que prefieras
+
+    if (error) {
+      console.error('Error fetching rituals:', error.message);
+      return [];
+    }
+
+    return data;
+  } catch (error) {
+    console.error('An unexpected error occurred in getRitualsForSite:', error.message);
+    return [];
+  }
+}

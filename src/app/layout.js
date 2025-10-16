@@ -19,10 +19,13 @@ const lato = Lato({
   display: 'swap',
 });
 
-// FIX: Metadata actualizada para Aromaluz
 export const metadata = {
   title: "Aromaluz Esotéric Santuario & Esencias",
   description: "Descubre el poder de la magia y la energía. Rituales, esencias y herramientas para manifestar, sanar y proteger tu espíritu.",
+  // FIX: Se añade el favicon de Aromaluz
+  icons: {
+    icon: '/aromaluzicon.png',
+  },
 };
 
 export default async function RootLayout({ children }) {

@@ -5,7 +5,8 @@ import TrustSection from "@/components/home/TrustSection";
 import FaqSection from "@/components/home/FaqSection";
 import Link from 'next/link';
 // FIX: Se importa la nueva función para obtener el ganador
-import { getLatestWinnerForSite } from "@/lib/supabaseClient";
+import { getLatestWinnerForSite, getRitualsForSite } from "@/lib/supabaseClient";
+
 
 const KnowledgeSection = () => (
   <section className="py-20 bg-background">
@@ -29,11 +30,13 @@ const KnowledgeSection = () => (
 export default async function HomePage() {
   // Se obtiene el último ganador usando el slug del .env
   const winner = await getLatestWinnerForSite(process.env.WEBSITE_SLUG);
+  const rituals = await getRitualsForSite(process.env.WEBSITE_SLUG);
 
   return (
     <>
-      <HeroSection />
-      <ProductsSection />
+    <HeroSection />
+      {/* FIX: Pasamos los rituales obtenidos como prop */}
+      <ProductsSection rituals={rituals} />
       <WinnerHighlight winner={winner} />
       <TrustSection />
       <KnowledgeSection />

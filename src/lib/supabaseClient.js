@@ -1,3 +1,4 @@
+// src/lib/supabaseClient.js
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -9,179 +10,76 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-/**
- * Fetches the website configuration from Supabase.
- * @param {string} websiteSlug - The slug of the website to fetch config for.
- * @returns {Promise<object | null>} The website configuration object or null if not found.
- */
+async function getWebsiteIdBySlug(websiteSlug) {
+  const { data, error } = await supabase
+    .from('websites')
+    .select('id')
+    .eq('slug', websiteSlug)
+    .single();
+
+  if (error) {
+    console.error(`Error fetching website ID for slug ${websiteSlug}:`, error.message);
+    return null;
+  }
+  return data.id;
+}
+
 export async function getWebsiteConfig(websiteSlug) {
-  try {
-    const { data: websiteData, error: websiteError } = await supabase
-      .from('websites')
-      .select('id')
-      .eq('slug', websiteSlug)
-      .limit(1)
-      .single();
-
-    if (websiteError) {
-      console.error('Error fetching website ID:', websiteError.message);
-      return null;
-    }
-    
-    if (!websiteData) {
-        console.error(`No website found with slug: ${websiteSlug}`);
-        return null;
-    }
-
-    const { data, error } = await supabase
-      .from('site_configurations')
-      .select('key, value')
-      .eq('website_id', websiteData.id);
-
-    if (error) {
-      console.error('Error fetching website config:', error.message);
-      return null;
-    }
-
-    const config = data.reduce((acc, { key, value }) => {
-      acc[key] = value;
-      return acc;
-    }, {});
-
-    return config;
-
-  } catch (error) {
-    console.error('An unexpected error occurred in getWebsiteConfig:', error.message);
-    return null;
-  }
+  const websiteId = await getWebsiteIdBySlug(websiteSlug);
+  if (!websiteId) return null;
+  const { data, error } = await supabase.from('site_configurations').select('key, value').eq('website_id', websiteId);
+  if (error) return null;
+  return data.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {});
 }
 
-/**
- * Fetches the last 5 winners for a site with a draw date up to today.
- * @param {string} websiteSlug - The slug of the website.
- * @returns {Promise<Array>} A list of winner objects.
- */
-export async function getWinnersForSite(websiteSlug) {
-  try {
-    const { data: websiteData, error: websiteError } = await supabase
-      .from('websites')
-      .select('id')
-      .eq('slug', websiteSlug)
-      .single();
-
-    if (websiteError || !websiteData) {
-      console.error('No se pudo encontrar el sitio para buscar ganadores:', websiteError?.message);
-      return [];
-    }
-
-    const websiteId = websiteData.id;
-    // Set date to today at midnight to include all of today's winners
-    const today = new Date();
-    today.setHours(23, 59, 59, 999);
-    const todayISO = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-
-    const { data, error } = await supabase
-      .from('ganadores')
-      .select('nombre_ganador, nombre_premio, fecha_sorteo')
-      .eq('website_id', websiteId)
-      // Filter for draw dates less than or equal to today
-      .lte('fecha_sorteo', todayISO)
-      .order('fecha_sorteo', { ascending: false }) // Order from most recent to oldest
-      .limit(5); // Limit to the last 5 winners
-
-    if (error) {
-      console.error('Error fetching winners:', error.message);
-      return [];
-    }
-
-    return data;
-
-  } catch (error) {
-    console.error('An unexpected error occurred in getWinnersForSite:', error.message);
-    return [];
-  }
-}
-
-/**
- * Fetches the single latest winner for a site with a draw date up to today.
- * @param {string} websiteSlug - The slug of the website.
- * @returns {Promise<object | null>} The latest winner object or null.
- */
-export async function getLatestWinnerForSite(websiteSlug) {
-  try {
-    const { data: websiteData, error: websiteError } = await supabase
-      .from('websites')
-      .select('id')
-      .eq('slug', websiteSlug)
-      .single();
-
-    if (websiteError || !websiteData) {
-      console.error('No se pudo encontrar el sitio para buscar el último ganador:', websiteError?.message);
-      return null;
-    }
-
-    const websiteId = websiteData.id;
-    const today = new Date();
-    today.setHours(23, 59, 59, 999);
-    const todayISO = today.toISOString().split('T')[0];
-
-    const { data, error } = await supabase
-      .from('ganadores')
-      .select('nombre_ganador, nombre_premio')
-      .eq('website_id', websiteId)
-      .lte('fecha_sorteo', todayISO)
-      .order('fecha_sorteo', { ascending: false })
-      .limit(1)
-      .single();
-
-    if (error) {
-      // It's common for no winner to be found, so we don't need to log this as a critical error.
-      console.log('No latest winner found or query error:', error.message);
-      return null;
-    }
-
-    return data;
-
-  } catch (error) {
-    console.error('An unexpected error occurred in getLatestWinnerForSite:', error.message);
-    return null;
-  }
-}
-
-/**
- * Fetches all rituals for a given website slug.
- * @param {string} websiteSlug - The slug of the website.
- * @returns {Promise<Array>} A list of ritual objects.
- */
 export async function getRitualsForSite(websiteSlug) {
+  const websiteId = await getWebsiteIdBySlug(websiteSlug);
+  if (!websiteId) return [];
+  const { data, error } = await supabase.from('rituales').select('*').eq('website_id', websiteId).order('created_at', { ascending: true });
+  if (error) return [];
+  return data;
+}
+
+// FIX: Se añade la función robusta para obtener los datos del Sorteo Fortuna.
+export async function getSorteoFortunaData(websiteSlug) {
+  const websiteId = await getWebsiteIdBySlug(websiteSlug);
+  if (!websiteId) {
+    return { latestPastDraw: null, nextFutureDraw: null, history: [] };
+  }
+
   try {
-    const { data: websiteData, error: websiteError } = await supabase
-      .from('websites')
-      .select('id')
-      .eq('slug', websiteSlug)
-      .single();
+    const today = new Date().toISOString().split('T')[0];
 
-    if (websiteError || !websiteData) {
-      console.error('No se pudo encontrar el sitio para buscar rituales:', websiteError?.message);
-      return [];
-    }
+    const [pastDrawsResult, nextFutureDrawResult] = await Promise.all([
+      supabase
+        .from('sorteos_fortuna')
+        .select('*')
+        .eq('website_id', websiteId)
+        .lte('fecha_sorteo', today)
+        .order('fecha_sorteo', { ascending: false })
+        .limit(6),
+      supabase
+        .from('sorteos_fortuna')
+        .select('*')
+        .eq('website_id', websiteId)
+        .gt('fecha_sorteo', today)
+        .order('fecha_sorteo', { ascending: true })
+        .limit(1)
+    ]);
 
-    const websiteId = websiteData.id;
+    const { data: pastDraws, error: pastError } = pastDrawsResult;
+    if (pastError) console.error("Error fetching past draws:", pastError.message);
 
-    const { data, error } = await supabase
-      .from('rituales')
-      .select('*')
-      .eq('website_id', websiteId)
-      .order('created_at', { ascending: true });
+    const { data: nextDraws, error: futureError } = nextFutureDrawResult;
+    if (futureError) console.error("Error fetching future draws:", futureError.message);
 
-    if (error) {
-      console.error('Error fetching rituals:', error.message);
-      return [];
-    }
+    const latestPastDraw = pastDraws?.[0] || null;
+    const history = pastDraws?.slice(1) || [];
+    const nextFutureDraw = nextDraws?.[0] || null;
 
-    return data;
+    return { latestPastDraw, nextFutureDraw, history };
   } catch (error) {
-    console.error('An unexpected error occurred in getRitualsForSite:', error.message);
-    return [];
+    console.error('Error in getSorteoFortunaData:', error.message);
+    return { latestPastDraw: null, nextFutureDraw: null, history: [] };
   }
 }

@@ -13,7 +13,7 @@ const Navbar = () => {
   const navLinks = [
     { href: '/', label: 'Inicio' },
     { href: '/rituales', label: 'Rituales' }, // FIX: Enlace a la página de todos los rituales
-    { href: '/circulo-de-la-suerte', label: 'Círculo de la Suerte' },
+    { href: '/circulo-de-la-suerte', label: 'Sorteo de la Fortuna' },
     { href: '/nosotros', label: 'Nosotros' },
     { href: '/tips', label: 'Tips' },
   ];

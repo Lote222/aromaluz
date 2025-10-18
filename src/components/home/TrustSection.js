@@ -16,7 +16,7 @@ const TrustSection = () => {
               - Isabella &quot;Luna&quot; Valeriano
             </p>
             <p className="text-muted">
-              Fundadora de Herbolaria Sagrada
+              Fundadora de Aromaluz Esotéric
             </p>
           </div>
           <div className="md:w-1/2 flex justify-center">

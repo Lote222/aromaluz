@@ -1,9 +1,13 @@
-// src/app/circulo-de-la-suerte/page.js
+// lote222/aromaluz/aromaluz-7ce8f9df620d255bc821ed7b7175ecb4a3c6c783/src/app/circulo-de-la-suerte/page.js
 import Link from 'next/link';
 import { getSorteoFortunaData } from '@/lib/supabaseClient';
 import SorteoDisplay from '@/components/sorteo/SorteoDisplay';
 import CountdownTimer from '@/components/sorteo/CountdownTimer';
 
+// FIX: Forzamos el renderizado dinámico en esta página también.
+export const dynamic = 'force-dynamic';
+
+// ... (El resto del archivo se mantiene igual)
 const HistoryList = ({ history }) => {
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };

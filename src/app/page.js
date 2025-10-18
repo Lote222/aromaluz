@@ -1,12 +1,14 @@
-// src/app/page.js
+// lote222/aromaluz/aromaluz-7ce8f9df620d255bc821ed7b7175ecb4a3c6c783/src/app/page.js
 import HeroSection from "@/components/home/HeroSection";
 import ProductsSection from "@/components/home/ProductsSection";
 import WinnerHighlight from "@/components/home/WinnerHighlight";
 import TrustSection from "@/components/home/TrustSection";
 import FaqSection from "@/components/home/FaqSection";
 import Link from 'next/link';
-// FIX: Se importan las funciones correctas
 import { getSorteoFortunaData, getRitualsForSite } from "@/lib/supabaseClient";
+
+// FIX: Se añade esta línea para forzar el renderizado dinámico.
+export const dynamic = 'force-dynamic';
 
 const KnowledgeSection = () => (
     <section className="py-20 bg-background text-center">
@@ -19,7 +21,6 @@ const KnowledgeSection = () => (
 );
 
 export default async function HomePage() {
-  // FIX: Se obtienen los datos del nuevo sorteo y los rituales
   const { latestPastDraw, nextFutureDraw } = await getSorteoFortunaData(process.env.WEBSITE_SLUG);
   const rituals = await getRitualsForSite(process.env.WEBSITE_SLUG);
 
@@ -27,7 +28,6 @@ export default async function HomePage() {
     <>
       <HeroSection />
       <ProductsSection rituals={rituals} />
-      {/* FIX: Se pasan los datos del sorteo al componente del home */}
       <WinnerHighlight latestPastDraw={latestPastDraw} nextFutureDraw={nextFutureDraw} />
       <TrustSection />
       <KnowledgeSection />

@@ -1,10 +1,8 @@
-// src/components/home/WinnerHighlight.js
 'use client';
 
 import Link from 'next/link';
-import CountdownTimer from '@/components/sorteo/CountdownTimer';
+import CountdownTimer from '@/components/sorteo/CountdownTimer'; // Asegúrate que la ruta sea correcta
 
-// DESIGN: Balotas temáticas de Aromaluz
 const NumberBall = ({ number, isLucky, delay }) => (
   <div
     className={`flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full font-bold text-xl md:text-2xl shadow-lg border-2 animate-fade-in-up ${
@@ -81,6 +79,12 @@ const WinnerHighlight = ({ latestPastDraw, nextFutureDraw }) => {
               <div className="mt-8">
                 <Link href="/#rituales" className="btn-primary">
                   Elegir mi Ritual
+                </Link>
+              </div>
+              {/* FIX: Se añade el enlace a los términos y condiciones */}
+              <div className="mt-4">
+                <Link href="/terms" className="text-xs text-muted hover:text-secondary underline transition-colors">
+                    Ver términos y condiciones del sorteo
                 </Link>
               </div>
             </div>

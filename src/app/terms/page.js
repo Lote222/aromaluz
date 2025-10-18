@@ -42,7 +42,7 @@ const TermsPage = () => {
               El Sorteo Fortuna Astral es una promoción comercial basada en el azar. Se ejecuta con estricto apego a las normativas de transparencia comercial aplicables en las jurisdicciones donde opera La Compañía, incluyendo Estados Unidos y los países relevantes de América Latina.
             </p>
             <p>
-              La Compañía se compromete a seguir las directrices generales de entidades reguladoras como Coljuegos (Colombia) y los Departamentos Estatales de Control de Promociones (EE.UU.) en lo que respecta a la equidad, legalidad y protección al consumidor en actividades promocionales. Los sorteos son supervisados para garantizar su correcta ejecución.
+              La Compañía se compromete a seguir las directrices generales de entidades reguladoras y los Departamentos Estatales de Control de Promociones (EE.UU.) en lo que respecta a la equidad, legalidad y protección al consumidor en actividades promocionales. Los sorteos son supervisados para garantizar su correcta ejecución.
             </p>
 
             <h2 className="text-2xl font-serif text-primary">Selección y Notificación de Ganadores</h2>
